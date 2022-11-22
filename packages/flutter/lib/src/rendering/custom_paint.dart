@@ -254,7 +254,8 @@ abstract class CustomPainter extends Listenable {
   /// this custom paint delegate.
   ///
   /// The given point is relative to the same coordinate space as the last
-  /// [paint] call.
+  /// [paint] call, with the origin being at the top left of the box.
+  /// The area of the box is the size of the [size] argument.
   ///
   /// The default behavior is to consider all points to be hits for
   /// background painters, and no points to be hits for foreground painters.
@@ -263,7 +264,7 @@ abstract class CustomPainter extends Listenable {
   /// image that should be considered a "hit", false if it corresponds to a
   /// point that should be considered outside the painted image, and null to use
   /// the default behavior.
-  bool? hitTest(Offset position) => null;
+  bool? hitTest(Offset position, Size size) => null;
 
   @override
   String toString() => '${describeIdentity(this)}(${ _repaint?.toString() ?? "" })';
@@ -536,7 +537,7 @@ class RenderCustomPaint extends RenderProxyBox {
 
   @override
   bool hitTestChildren(BoxHitTestResult result, { required Offset position }) {
-    if (_foregroundPainter != null && (_foregroundPainter!.hitTest(position) ?? false)) {
+    if (_foregroundPainter != null && (_foregroundPainter!.hitTest(position, size) ?? false)) {
       return true;
     }
     return super.hitTestChildren(result, position: position);
@@ -544,7 +545,7 @@ class RenderCustomPaint extends RenderProxyBox {
 
   @override
   bool hitTestSelf(Offset position) {
-    return _painter != null && (_painter!.hitTest(position) ?? true);
+    return _painter != null && (_painter!.hitTest(position, size) ?? true);
   }
 
   @override
