@@ -586,7 +586,7 @@ abstract class ToggleablePainter extends ChangeNotifier implements CustomPainter
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 
   @override
-  bool? hitTest(Offset position) => null;
+  bool? hitTest(Offset position, Size size) => null;
 
   @override
   SemanticsBuilderCallback? get semanticsBuilder => null;

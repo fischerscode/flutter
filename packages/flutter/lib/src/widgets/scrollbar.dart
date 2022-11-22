@@ -712,7 +712,7 @@ class ScrollbarPainter extends ChangeNotifier implements CustomPainter {
   // - Hit Testing
 
   @override
-  bool? hitTest(Offset? position) {
+  bool? hitTest(Offset? position, Size size) {
     // There is nothing painted to hit.
     if (_thumbRect == null) {
       return null;
@@ -2130,8 +2130,11 @@ class RawScrollbarState<T extends RawScrollbar> extends State<T> with TickerProv
 
   void _receivedPointerSignal(PointerSignalEvent event) {
     _cachedController = _effectiveScrollController;
+    
+    final Size? size = mounted ? context.size : null;
+
     // Only try to scroll if the bar absorb the hit test.
-    if ((scrollbarPainter.hitTest(event.localPosition) ?? false) &&
+    if ((scrollbarPainter.hitTest(event.localPosition, size ?? Size.zero) ?? false) &&
         _cachedController != null &&
         _cachedController!.hasClients &&
         (!_thumbDragging || kIsWeb)) {

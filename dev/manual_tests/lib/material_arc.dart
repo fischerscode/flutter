@@ -93,7 +93,7 @@ class _PointDemoPainter extends CustomPainter {
   }
 
   @override
-  bool hitTest(Offset position) {
+  bool hitTest(Offset position, Size size) {
     return (arc.begin! - position).distanceSquared < _kTargetSlop
         || (arc.end! - position).distanceSquared < _kTargetSlop;
   }
@@ -262,7 +262,7 @@ class _RectangleDemoPainter extends CustomPainter {
   }
 
   @override
-  bool hitTest(Offset position) {
+  bool hitTest(Offset position, Size size) {
     return (arc.begin!.center - position).distanceSquared < _kTargetSlop
         || (arc.end!.center - position).distanceSquared < _kTargetSlop;
   }
