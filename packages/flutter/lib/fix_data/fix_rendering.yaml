@@ -18,6 +18,22 @@
 # * Fixes in this file are from the Rendering library. *
 version: 1
 transforms:
+  #TODO: Add the pull request id
+  # Changes made in https://github.com/flutter/flutter/pull/
+  - title: "Add size parameter"
+    date: 2022-11-22
+    element:
+      uris: [ 'rendering.dart' ]
+      method: 'hitTest'
+      inClass: 'CustomPainter'
+    changes:
+      - kind: 'addParameter'
+        index: 1
+        name: 'size'
+        style: 'required_positional'
+        argumentValue:
+          expression: 'size'
+
   # Changes made in https://github.com/flutter/flutter/pull/66305
   - title: "Migrate to 'clipBehavior'"
     date: 2020-09-22
