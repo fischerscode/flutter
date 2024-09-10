@@ -295,6 +295,7 @@ class RenderParagraph extends RenderBox with ContainerRenderObjectMixin<RenderBo
     List<RenderBox>? children,
     Color? selectionColor,
     SelectionRegistrar? registrar,
+    ParagraphBuilderFactory? paragraphBuilderFactory,
   }) : assert(text.debugAssertIsValid()),
        assert(maxLines == null || maxLines > 0),
        assert(
@@ -315,6 +316,7 @@ class RenderParagraph extends RenderBox with ContainerRenderObjectMixin<RenderBo
          strutStyle: strutStyle,
          textWidthBasis: textWidthBasis,
          textHeightBehavior: textHeightBehavior,
+         paragraphBuilderFactory: paragraphBuilderFactory,
        ) {
     addAll(children);
     this.registrar = registrar;
@@ -671,6 +673,16 @@ class RenderParagraph extends RenderBox with ContainerRenderObjectMixin<RenderBo
     if (_lastSelectableFragments?.any((_SelectableFragment fragment) => fragment.value.hasSelection) ?? false) {
       markNeedsPaint();
     }
+  }
+
+  /// {@macro flutter.painting.textPainter.paragraphBuilderFactory}
+  ParagraphBuilderFactory? get paragraphBuilderFactory => _textPainter.paragraphBuilderFactory;
+  set paragraphBuilderFactory(ParagraphBuilderFactory? value) {
+    if (_textPainter.paragraphBuilderFactory == value) {
+      return;
+    }
+    _textPainter.paragraphBuilderFactory = value;
+    markNeedsLayout();
   }
 
   Offset _getOffsetForPosition(TextPosition position) {

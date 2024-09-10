@@ -490,6 +490,7 @@ class Text extends StatelessWidget {
     this.textHeightBehavior,
     this.selectionColor,
   }) : textSpan = null,
+       paragraphBuilderFactory = null,
        assert(
          textScaler == null || textScaleFactor == null,
          'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
@@ -525,6 +526,7 @@ class Text extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.selectionColor,
+    this.paragraphBuilderFactory,
   }) : data = null,
        assert(
          textScaler == null || textScaleFactor == null,
@@ -655,6 +657,9 @@ class Text extends StatelessWidget {
   /// (semi-transparent grey).
   final Color? selectionColor;
 
+  /// {@macro flutter.painting.textPainter.paragraphBuilderFactory}
+  final ParagraphBuilderFactory? paragraphBuilderFactory;
+
   @override
   Widget build(BuildContext context) {
     final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
@@ -693,6 +698,7 @@ class Text extends StatelessWidget {
             text: data,
             children: textSpan != null ? <InlineSpan>[textSpan!] : null,
           ),
+          paragraphBuilderFactory: paragraphBuilderFactory,
         ),
       );
     } else {
@@ -713,6 +719,7 @@ class Text extends StatelessWidget {
           text: data,
           children: textSpan != null ? <InlineSpan>[textSpan!] : null,
         ),
+        paragraphBuilderFactory: paragraphBuilderFactory,
       );
     }
     if (semanticsLabel != null) {
@@ -764,6 +771,7 @@ class _SelectableTextContainer extends StatefulWidget {
     required this.textWidthBasis,
     this.textHeightBehavior,
     required this.selectionColor,
+    this.paragraphBuilderFactory,
   });
 
   final InlineSpan text;
@@ -778,6 +786,7 @@ class _SelectableTextContainer extends StatefulWidget {
   final TextWidthBasis textWidthBasis;
   final ui.TextHeightBehavior? textHeightBehavior;
   final Color selectionColor;
+  final ParagraphBuilderFactory? paragraphBuilderFactory;
 
   @override
   State<_SelectableTextContainer> createState() => _SelectableTextContainerState();
@@ -819,6 +828,7 @@ class _SelectableTextContainerState extends State<_SelectableTextContainer> {
         textHeightBehavior: widget.textHeightBehavior,
         selectionColor: widget.selectionColor,
         text: widget.text,
+        paragraphBuilderFactory: widget.paragraphBuilderFactory,
       ),
     );
   }
@@ -839,6 +849,7 @@ class _RichText extends StatelessWidget {
     required this.textWidthBasis,
     this.textHeightBehavior,
     required this.selectionColor,
+    this.paragraphBuilderFactory,
   });
 
   final GlobalKey? textKey;
@@ -854,6 +865,7 @@ class _RichText extends StatelessWidget {
   final TextWidthBasis textWidthBasis;
   final ui.TextHeightBehavior? textHeightBehavior;
   final Color selectionColor;
+  final ParagraphBuilderFactory? paragraphBuilderFactory;
 
   @override
   Widget build(BuildContext context) {
@@ -873,6 +885,7 @@ class _RichText extends StatelessWidget {
       selectionRegistrar: registrar,
       selectionColor: selectionColor,
       text: text,
+      paragraphBuilderFactory: paragraphBuilderFactory,
     );
   }
 }

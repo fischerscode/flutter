@@ -995,7 +995,9 @@ class TextPainter {
     markNeedsLayout();
   }
 
-  /// The factory used to create the [ui.ParagraphBuilder].
+  /// {@template flutter.painting.textPainter.paragraphBuilderFactory}
+  /// Function called to create a custom [ui.ParagraphBuilder].
+  /// {@endtemplate}
   ParagraphBuilderFactory? get paragraphBuilderFactory => _paragraphBuilderFactory;
   ParagraphBuilderFactory? _paragraphBuilderFactory;
   set paragraphBuilderFactory(ParagraphBuilderFactory? value) {

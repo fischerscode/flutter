@@ -5792,6 +5792,7 @@ class RichText extends MultiChildRenderObjectWidget {
     this.textHeightBehavior,
     this.selectionRegistrar,
     this.selectionColor,
+    this.paragraphBuilderFactory,
   }) : assert(maxLines == null || maxLines > 0),
        assert(selectionRegistrar == null || selectionColor != null),
        assert(textScaleFactor == 1.0 || identical(textScaler, TextScaler.noScaling), 'Use textScaler instead.'),
@@ -5893,6 +5894,9 @@ class RichText extends MultiChildRenderObjectWidget {
   /// widgets.
   final Color? selectionColor;
 
+  /// {@macro flutter.painting.textPainter.paragraphBuilderFactory}
+  final ParagraphBuilderFactory? paragraphBuilderFactory;
+
   @override
   RenderParagraph createRenderObject(BuildContext context) {
     assert(textDirection != null || debugCheckHasDirectionality(context));
@@ -5928,7 +5932,8 @@ class RichText extends MultiChildRenderObjectWidget {
       ..textHeightBehavior = textHeightBehavior
       ..locale = locale ?? Localizations.maybeLocaleOf(context)
       ..registrar = selectionRegistrar
-      ..selectionColor = selectionColor;
+      ..selectionColor = selectionColor
+      ..paragraphBuilderFactory = paragraphBuilderFactory
   }
 
   @override
