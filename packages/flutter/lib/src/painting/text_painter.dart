@@ -32,6 +32,13 @@ import 'text_style.dart';
 export 'dart:ui' show LineMetrics;
 export 'package:flutter/services.dart' show TextRange, TextSelection;
 
+/// The signature of a function that creates a [ui.ParagraphBuilder].
+typedef ParagraphBuilderFactory = ui.ParagraphBuilder Function(ui.ParagraphStyle style);
+
+ui.ParagraphBuilder _kDefaultParagraphBuilderFactory(ui.ParagraphStyle style) {
+  return ui.ParagraphBuilder(style);
+}
+
 /// The default font size if none is specified.
 ///
 /// This should be kept in sync with the defaults set in the engine (e.g.,
@@ -575,6 +582,7 @@ class TextPainter {
     StrutStyle? strutStyle,
     TextWidthBasis textWidthBasis = TextWidthBasis.parent,
     TextHeightBehavior? textHeightBehavior,
+    ParagraphBuilderFactory? paragraphBuilderFactory,
   }) : assert(text == null || text.debugAssertIsValid()),
        assert(maxLines == null || maxLines > 0),
        assert(textScaleFactor == 1.0 || identical(textScaler, TextScaler.noScaling), 'Use textScaler instead.'),
@@ -587,7 +595,8 @@ class TextPainter {
        _locale = locale,
        _strutStyle = strutStyle,
        _textWidthBasis = textWidthBasis,
-       _textHeightBehavior = textHeightBehavior {
+       _textHeightBehavior = textHeightBehavior,
+       _paragraphBuilderFactory = paragraphBuilderFactory {
     // TODO(polina-c): stop duplicating code across disposables
     // https://github.com/flutter/flutter/issues/137435
     if (kFlutterMemoryAllocationsEnabled) {
@@ -986,6 +995,17 @@ class TextPainter {
     markNeedsLayout();
   }
 
+  /// The factory used to create the [ui.ParagraphBuilder].
+  ParagraphBuilderFactory? get paragraphBuilderFactory => _paragraphBuilderFactory;
+  ParagraphBuilderFactory? _paragraphBuilderFactory;
+  set paragraphBuilderFactory(ParagraphBuilderFactory? value) {
+    if (_paragraphBuilderFactory == value) {
+      return;
+    }
+    _paragraphBuilderFactory = value;
+    markNeedsLayout();
+  }
+
   /// An ordered list of [TextBox]es that bound the positions of the placeholders
   /// in the paragraph.
   ///
@@ -1052,7 +1072,7 @@ class TextPainter {
 
   ui.Paragraph? _layoutTemplate;
   ui.Paragraph _createLayoutTemplate() {
-    final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+    final ui.ParagraphBuilder builder = (paragraphBuilderFactory ?? _kDefaultParagraphBuilderFactory)(
       _createParagraphStyle(TextAlign.left),
     ); // direction doesn't matter, text is just a space
     final ui.TextStyle? textStyle = text?.style?.getTextStyle(textScaler: textScaler);
@@ -1151,7 +1171,7 @@ class TextPainter {
   // Creates a ui.Paragraph using the current configurations in this class and
   // assign it to _paragraph.
   ui.Paragraph _createParagraph(InlineSpan text) {
-    final ui.ParagraphBuilder builder = ui.ParagraphBuilder(_createParagraphStyle());
+    final ui.ParagraphBuilder builder = (paragraphBuilderFactory ?? _kDefaultParagraphBuilderFactory)(_createParagraphStyle());
     text.build(builder, textScaler: textScaler, dimensions: _placeholderDimensions);
     assert(() {
       _debugMarkNeedsLayoutCallStack = null;
