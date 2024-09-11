@@ -5913,6 +5913,7 @@ class RichText extends MultiChildRenderObjectWidget {
       locale: locale ?? Localizations.maybeLocaleOf(context),
       registrar: selectionRegistrar,
       selectionColor: selectionColor,
+      paragraphBuilderFactory: paragraphBuilderFactory,
     );
   }
 
